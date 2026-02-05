@@ -597,7 +597,7 @@ Rules for analysis:
           placeholder={"Example: Our firm \"TechForward\" will sell a SaaS product targeting small businesses. We plan to hire 4 employees, price at $50/month, and target 500 customers by end of year. Startup costs are $8,000 and monthly operating costs are $3,500..."}
           rows={6}
           style={{
-            width: "100%", background: "rgba(0,0,0,0.3)", border: "none",
+            width: "100%", background: "rgba(0,0,0,0.3)", border: "none", outline: "none",
             borderRadius: 10, padding: "14px 16px", color: "#e8e8ec", resize: "vertical",
             fontFamily: "'IBM Plex Mono', monospace", fontSize: 13, lineHeight: 1.7,
             outline: "none",
