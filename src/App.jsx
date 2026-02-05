@@ -135,7 +135,7 @@ function TierCard({ tier, index }) {
       onMouseLeave={() => setHovered(false)}
       style={{
         background: hovered ? "#1a1a2e" : "#12121a",
-        border: `1px solid ${hovered ? tier.border : "rgba(255,255,255,0.07)"}`,
+        border: "none",
         borderRadius: 16,
         padding: "32px 24px",
         position: "relative",
@@ -218,7 +218,7 @@ function TierCard({ tier, index }) {
           ? "linear-gradient(135deg, #c8ff00, #8bcc00)"
           : hovered ? `${tier.color}18` : "rgba(255,255,255,0.05)",
         color: isPlatinum ? "#0a0a0f" : tier.color,
-        border: isPlatinum ? "none" : `1px solid ${tier.border}`,
+        border: "none",
         transition: "all 0.25s",
       }}>
         {isPlatinum ? "GET MAXIMUM EDGE →" : `SELECT ${tier.name.toUpperCase()} →`}
@@ -247,7 +247,7 @@ function FOMOTicker() {
   }, []);
   return (
     <div style={{
-      background: "rgba(200,255,0,0.04)", border: "1px solid rgba(200,255,0,0.12)",
+      background: "rgba(200,255,0,0.04)", border: "none",
       borderRadius: 10, padding: "10px 20px", display: "flex", alignItems: "center", gap: 12,
       maxWidth: 520, margin: "0 auto",
     }}>
@@ -275,7 +275,7 @@ export default function App() {
       <nav style={{
         position: "sticky", top: 0, zIndex: 50,
         background: "rgba(10,10,15,0.85)", backdropFilter: "blur(12px)",
-        borderBottom: "1px solid rgba(255,255,255,0.06)",
+        borderBottom: "none",
         padding: "14px 32px", display: "flex", alignItems: "center", justifyContent: "space-between",
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer" }} onClick={() => setSection("home")}>
@@ -289,7 +289,7 @@ export default function App() {
               <path d="M7 4L9.5 5.5V8.5L7 10L4.5 8.5V5.5L7 4Z" fill="#0a0a0f"/>
             </svg>
           </div>
-          <span style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 16, color: "#fff" }}>VE Quant</span>
+          <span style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 16, color: "#fff" }}>Aurelius Quant</span>
         </div>
         <div style={{ display: "flex", gap: 28 }}>
           {["home", "pricing", "demo"].map(s => (
@@ -314,10 +314,10 @@ export default function App() {
       {/* Footer */}
       <footer style={{
         textAlign: "center", padding: "60px 24px 40px",
-        borderTop: "1px solid rgba(255,255,255,0.05)", marginTop: 80,
+        borderTop: "none", marginTop: 80,
       }}>
-        <div style={{ fontFamily: "'Syne', sans-serif", fontSize: 18, fontWeight: 700, color: "#fff", marginBottom: 8 }}>VE Quant Engine</div>
-        <div style={{ fontSize: 11, color: "#3a3a4a", letterSpacing: 1 }}>© 2026 VE QUANT. ALL RIGHTS RESERVED. PROPRIETARY SOFTWARE.</div>
+        <div style={{ fontFamily: "'Syne', sans-serif", fontSize: 18, fontWeight: 700, color: "#fff", marginBottom: 8 }}>Aurelius Quant</div>
+        <div style={{ fontSize: 11, color: "#3a3a4a", letterSpacing: 1 }}>© 2026 AURELIUS QUANT. ALL RIGHTS RESERVED. PROPRIETARY SOFTWARE.</div>
       </footer>
     </div>
   );
@@ -329,7 +329,7 @@ function HomePage({ setSection }) {
     <div style={{ maxWidth: 860, margin: "0 auto", padding: "80px 24px 40px", textAlign: "center" }}>
       {/* Badge */}
       <div style={{
-        display: "inline-block", background: "rgba(200,255,0,0.1)", border: "1px solid rgba(200,255,0,0.2)",
+        display: "inline-block", background: "rgba(200,255,0,0.1)", border: "none",
         borderRadius: 20, padding: "5px 16px", fontSize: 11, color: "#c8ff00",
         letterSpacing: 2, textTransform: "uppercase", marginBottom: 24, fontWeight: 500,
       }}>Quantitative Decision Platform</div>
@@ -368,7 +368,7 @@ function HomePage({ setSection }) {
         >START WINNING →</button>
         <button onClick={() => setSection("demo")} style={{
           background: "transparent", color: "#c8ff00",
-          border: "1px solid rgba(200,255,0,0.3)", borderRadius: 10, padding: "14px 32px", cursor: "pointer",
+          border: "none", borderRadius: 10, padding: "14px 32px", cursor: "pointer",
           fontFamily: "'IBM Plex Mono', monospace", fontSize: 13, fontWeight: 500, letterSpacing: 0.5,
           transition: "background 0.2s",
         }}
@@ -394,7 +394,7 @@ function HomePage({ setSection }) {
           ].map((item, i) => (
             <div key={i} style={{
               flex: "1 1 180px", maxWidth: 220,
-              background: "#12121a", border: "1px solid rgba(255,255,255,0.07)",
+              background: "#12121a", border: "none",
               borderRadius: 14, padding: "24px 20px",
             }}>
               <div style={{ fontFamily: "'Syne', sans-serif", fontSize: 28, fontWeight: 800, color: "rgba(200,255,0,0.15)", marginBottom: 8 }}>{item.step}</div>
@@ -408,14 +408,14 @@ function HomePage({ setSection }) {
       {/* FOMO CTA */}
       <div style={{
         marginTop: 80, background: "linear-gradient(135deg, rgba(200,255,0,0.06), rgba(200,255,0,0.02))",
-        border: "1px solid rgba(200,255,0,0.15)", borderRadius: 20,
+        border: "none", borderRadius: 20,
         padding: "48px 32px", textAlign: "center",
       }}>
         <div style={{ fontFamily: "'Syne', sans-serif", fontSize: 28, fontWeight: 800, color: "#fff", marginBottom: 12 }}>
           Your rivals are already using this.
         </div>
         <p style={{ fontSize: 13, color: "#6b6b7b", maxWidth: 440, margin: "0 auto 28px", lineHeight: 1.7 }}>
-          Every season more schools upgrade. The gap between teams using VE Quant and teams that aren't grows every day.
+          Every season more schools upgrade. The gap between teams using Aurelius Quant and teams that aren't grows every day.
         </p>
         <button onClick={() => setSection("pricing")} style={{
           background: "linear-gradient(135deg, #c8ff00, #8bcc00)", color: "#0a0a0f",
@@ -432,7 +432,7 @@ function PricingPage() {
   return (
     <div style={{ maxWidth: 1100, margin: "0 auto", padding: "80px 24px 40px", textAlign: "center" }}>
       <div style={{
-        display: "inline-block", background: "rgba(200,255,0,0.1)", border: "1px solid rgba(200,255,0,0.2)",
+        display: "inline-block", background: "rgba(200,255,0,0.1)", border: "none",
         borderRadius: 20, padding: "5px 16px", fontSize: 11, color: "#c8ff00",
         letterSpacing: 2, textTransform: "uppercase", marginBottom: 20, fontWeight: 500,
       }}>Pricing</div>
@@ -483,7 +483,7 @@ function DemoPage() {
     }
   }, [results]);
 
-  const SYSTEM_PROMPT = `You are the VE Quant Engine — a quantitative decision analysis system used in competitive business simulation for schools.
+  const SYSTEM_PROMPT = `You are the Aurelius Quant — a quantitative decision analysis system used in competitive business simulation for schools.
 
 When a user submits a business plan, you must analyze it and return a FULL quantitative report in this exact JSON structure. Return ONLY valid JSON, nothing else.
 
@@ -570,7 +570,7 @@ Rules for analysis:
     <div style={{ maxWidth: 780, margin: "0 auto", padding: "80px 24px 40px" }}>
       <div style={{ textAlign: "center", marginBottom: 40 }}>
         <div style={{
-          display: "inline-block", background: "rgba(200,255,0,0.1)", border: "1px solid rgba(200,255,0,0.2)",
+          display: "inline-block", background: "rgba(200,255,0,0.1)", border: "none",
           borderRadius: 20, padding: "5px 16px", fontSize: 11, color: "#c8ff00",
           letterSpacing: 2, textTransform: "uppercase", marginBottom: 20, fontWeight: 500,
         }}>Live Demo</div>
@@ -585,7 +585,7 @@ Rules for analysis:
 
       {/* Input */}
       <div style={{
-        background: "#12121a", border: "1px solid rgba(255,255,255,0.07)",
+        background: "#12121a", border: "none",
         borderRadius: 16, padding: 24, marginBottom: 24,
       }}>
         <label style={{ fontSize: 11, color: "#c8ff00", letterSpacing: 1.5, textTransform: "uppercase", display: "block", marginBottom: 10 }}>
@@ -597,7 +597,7 @@ Rules for analysis:
           placeholder={"Example: Our firm \"TechForward\" will sell a SaaS product targeting small businesses. We plan to hire 4 employees, price at $50/month, and target 500 customers by end of year. Startup costs are $8,000 and monthly operating costs are $3,500..."}
           rows={6}
           style={{
-            width: "100%", background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.08)",
+            width: "100%", background: "rgba(0,0,0,0.3)", border: "none",
             borderRadius: 10, padding: "14px 16px", color: "#e8e8ec", resize: "vertical",
             fontFamily: "'IBM Plex Mono', monospace", fontSize: 13, lineHeight: 1.7,
             outline: "none",
@@ -615,7 +615,7 @@ Rules for analysis:
       </div>
 
       {error && (
-        <div style={{ background: "rgba(255,77,77,0.1)", border: "1px solid rgba(255,77,77,0.3)", borderRadius: 10, padding: "12px 16px", color: "#ff6b6b", fontSize: 13, marginBottom: 24 }}>
+        <div style={{ background: "rgba(255,77,77,0.1)", border: "none", borderRadius: 10, padding: "12px 16px", color: "#ff6b6b", fontSize: 13, marginBottom: 24 }}>
           {error}
         </div>
       )}
@@ -626,7 +626,7 @@ Rules for analysis:
           {/* Header */}
           <div style={{
             background: "linear-gradient(135deg, rgba(200,255,0,0.08), rgba(200,255,0,0.02))",
-            border: "1px solid rgba(200,255,0,0.2)", borderRadius: 16, padding: "24px 28px",
+            border: "none", borderRadius: 16, padding: "24px 28px",
           }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 12 }}>
               <div>
@@ -650,7 +650,7 @@ Rules for analysis:
           <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
             {/* Constraints */}
             <div style={{
-              flex: "1 1 300px", background: "#12121a", border: `1px solid ${results.constraint_validation.passed ? "rgba(200,255,0,0.2)" : "rgba(255,77,77,0.2)"}`,
+              flex: "1 1 300px", background: "#12121a", border: "none",
               borderRadius: 16, padding: 24,
             }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
@@ -677,7 +677,7 @@ Rules for analysis:
             </div>
 
             {/* Judge Prediction */}
-            <div style={{ flex: "1 1 300px", background: "#12121a", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 16, padding: 24 }}>
+            <div style={{ flex: "1 1 300px", background: "#12121a", border: "none", borderRadius: 16, padding: 24 }}>
               <div style={{ fontSize: 11, color: "#6b6b7b", letterSpacing: 1, textTransform: "uppercase", marginBottom: 16 }}>Judge Prediction</div>
               <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
                 <div>
@@ -699,7 +699,7 @@ Rules for analysis:
           {/* Grid: Monte Carlo + Complexity */}
           <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
             {/* Monte Carlo */}
-            <div style={{ flex: "1 1 300px", background: "#12121a", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 16, padding: 24 }}>
+            <div style={{ flex: "1 1 300px", background: "#12121a", border: "none", borderRadius: 16, padding: 24 }}>
               <div style={{ fontSize: 11, color: "#6b6b7b", letterSpacing: 1, textTransform: "uppercase", marginBottom: 16 }}>
                 Monte Carlo — {results.monte_carlo.simulations_run.toLocaleString()} sims
               </div>
@@ -718,7 +718,7 @@ Rules for analysis:
             </div>
 
             {/* Complexity */}
-            <div style={{ flex: "1 1 300px", background: "#12121a", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 16, padding: 24 }}>
+            <div style={{ flex: "1 1 300px", background: "#12121a", border: "none", borderRadius: 16, padding: 24 }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
                 <span style={{ fontSize: 11, color: "#6b6b7b", letterSpacing: 1, textTransform: "uppercase" }}>Complexity Score</span>
                 <span style={{
@@ -751,7 +751,7 @@ Rules for analysis:
 
           {/* Financials + Scenarios */}
           <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-            <div style={{ flex: "1 1 300px", background: "#12121a", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 16, padding: 24 }}>
+            <div style={{ flex: "1 1 300px", background: "#12121a", border: "none", borderRadius: 16, padding: 24 }}>
               <div style={{ fontSize: 11, color: "#6b6b7b", letterSpacing: 1, textTransform: "uppercase", marginBottom: 16 }}>Financial Projection</div>
               {[
                 { label: "Revenue", value: results.financial_projection.revenue_estimate, color: "#c8ff00" },
@@ -763,7 +763,7 @@ Rules for analysis:
                   <span style={{ fontSize: 14, fontWeight: 500, color: item.color }}>${item.value.toLocaleString()}</span>
                 </div>
               ))}
-              <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", marginTop: 12, paddingTop: 12, display: "flex", justifyContent: "space-between" }}>
+              <div style={{ borderTop: "none", marginTop: 12, paddingTop: 12, display: "flex", justifyContent: "space-between" }}>
                 <span style={{ fontSize: 12, color: "#6b6b7b" }}>Profit Margin</span>
                 <span style={{
                   fontSize: 14, fontWeight: 600,
@@ -772,7 +772,7 @@ Rules for analysis:
               </div>
             </div>
 
-            <div style={{ flex: "1 1 300px", background: "#12121a", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 16, padding: 24 }}>
+            <div style={{ flex: "1 1 300px", background: "#12121a", border: "none", borderRadius: 16, padding: 24 }}>
               <div style={{ fontSize: 11, color: "#6b6b7b", letterSpacing: 1, textTransform: "uppercase", marginBottom: 16 }}>Scenario Analysis</div>
               <div style={{ background: "rgba(200,255,0,0.06)", borderRadius: 8, padding: "10px 14px", marginBottom: 8 }}>
                 <div style={{ fontSize: 11, color: "#c8ff00", marginBottom: 2 }}>Best: {results.scenario_analysis.best_scenario.name}</div>
@@ -788,7 +788,7 @@ Rules for analysis:
           </div>
 
           {/* Recommendations */}
-          <div style={{ background: "#12121a", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 16, padding: 24 }}>
+          <div style={{ background: "#12121a", border: "none", borderRadius: 16, padding: 24 }}>
             <div style={{ fontSize: 11, color: "#6b6b7b", letterSpacing: 1, textTransform: "uppercase", marginBottom: 16 }}>Recommendations</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {results.recommendations.map((r, i) => (
@@ -807,7 +807,7 @@ Rules for analysis:
           {/* Upgrade nudge */}
           <div style={{
             background: "linear-gradient(135deg, rgba(200,255,0,0.06), rgba(200,255,0,0.02))",
-            border: "1px solid rgba(200,255,0,0.15)", borderRadius: 16, padding: "24px 28px", textAlign: "center",
+            border: "none", borderRadius: 16, padding: "24px 28px", textAlign: "center",
           }}>
             <div style={{ fontSize: 13, color: "#a0a0b0", marginBottom: 8 }}>
               This demo runs <strong style={{ color: "#c8ff00" }}>1,000 simulations</strong>. Paid tiers unlock up to <strong style={{ color: "#c8ff00" }}>10,000 sims</strong>, stress testing, competitive intelligence, and more.
