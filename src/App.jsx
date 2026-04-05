@@ -7,7 +7,6 @@ const TIERS = [
     price: 100,
     color: "#cd7f32",
     glow: "rgba(205,127,50,0.25)",
-    border: "rgba(205,127,50,0.35)",
     tag: null,
     features: [
       { text: "Constraint validation engine", included: true },
@@ -29,7 +28,6 @@ const TIERS = [
     price: 300,
     color: "#a8a9ad",
     glow: "rgba(168,169,173,0.25)",
-    border: "rgba(168,169,173,0.35)",
     tag: "Most Popular",
     features: [
       { text: "Constraint validation engine", included: true },
@@ -51,7 +49,6 @@ const TIERS = [
     price: 750,
     color: "#ffd700",
     glow: "rgba(255,215,0,0.25)",
-    border: "rgba(255,215,0,0.4)",
     tag: "Best Value",
     features: [
       { text: "Constraint validation engine", included: true },
@@ -73,7 +70,6 @@ const TIERS = [
     price: 2000,
     color: "#e5e4e2",
     glow: "rgba(229,228,226,0.3)",
-    border: "rgba(229,228,226,0.45)",
     tag: "Maximum Edge",
     features: [
       { text: "Constraint validation engine", included: true },
@@ -99,12 +95,17 @@ const STATS = [
   { value: "3-Layer", label: "Constraint Engine" },
 ];
 
+const CONTACT_EMAIL = "contact@aureliusquant.com";
+
 // ─── ANIMATED COUNTER ──────────────────────────────────────────────────────
 function AnimatedStat({ value, label, delay }) {
   const [visible, setVisible] = useState(false);
   const ref = useRef();
   useEffect(() => {
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setVisible(true); }, { threshold: 0.3 });
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) setVisible(true); },
+      { threshold: 0.3 }
+    );
     if (ref.current) obs.observe(ref.current);
     return () => obs.disconnect();
   }, []);
@@ -115,18 +116,14 @@ function AnimatedStat({ value, label, delay }) {
       transform: visible ? "translateY(0)" : "translateY(20px)",
       transition: `all 0.6s cubic-bezier(.22,1,.36,1) ${delay}ms`,
     }}>
-      <div style={{
-        fontFamily: "'Syne', sans-serif",
-        fontSize: 36, fontWeight: 800,
-        color: "#c8ff00", letterSpacing: -1,
-      }}>{value}</div>
+      <div style={{ fontFamily: "'Syne', sans-serif", fontSize: 36, fontWeight: 800, color: "#c8ff00", letterSpacing: -1 }}>{value}</div>
       <div style={{ fontSize: 11, color: "#6b6b7b", textTransform: "uppercase", letterSpacing: 2, marginTop: 4 }}>{label}</div>
     </div>
   );
 }
 
 // ─── TIER CARD ─────────────────────────────────────────────────────────────
-function TierCard({ tier, index }) {
+function TierCard({ tier, onSelect }) {
   const [hovered, setHovered] = useState(false);
   const isPlatinum = tier.name === "Platinum";
   return (
@@ -135,7 +132,6 @@ function TierCard({ tier, index }) {
       onMouseLeave={() => setHovered(false)}
       style={{
         background: hovered ? "#1a1a2e" : "#12121a",
-        border: "none",
         borderRadius: 16,
         padding: "32px 24px",
         position: "relative",
@@ -146,6 +142,7 @@ function TierCard({ tier, index }) {
         minWidth: 200,
         maxWidth: 260,
         overflow: "hidden",
+        cursor: "default",
       }}
     >
       {/* Glow top bar */}
@@ -168,19 +165,12 @@ function TierCard({ tier, index }) {
       )}
 
       {/* Name */}
-      <div style={{
-        fontFamily: "'Syne', sans-serif",
-        fontSize: 22, fontWeight: 700, color: tier.color,
-        marginBottom: 8,
-      }}>{tier.name}</div>
+      <div style={{ fontFamily: "'Syne', sans-serif", fontSize: 22, fontWeight: 700, color: tier.color, marginBottom: 8 }}>{tier.name}</div>
 
       {/* Price */}
       <div style={{ display: "flex", alignItems: "flex-start", gap: 2, marginBottom: 4 }}>
         <span style={{ fontSize: 14, color: "#6b6b7b", marginTop: 4 }}>$</span>
-        <span style={{
-          fontFamily: "'Syne', sans-serif",
-          fontSize: 42, fontWeight: 800, color: "#fff", letterSpacing: -2, lineHeight: 1,
-        }}>{tier.price}</span>
+        <span style={{ fontFamily: "'Syne', sans-serif", fontSize: 42, fontWeight: 800, color: "#fff", letterSpacing: -2, lineHeight: 1 }}>{tier.price}</span>
       </div>
       <div style={{ fontSize: 11, color: "#6b6b7b", marginBottom: 24 }}>per season</div>
 
@@ -189,8 +179,7 @@ function TierCard({ tier, index }) {
         {tier.features.map((f, i) => (
           <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
             <div style={{
-              width: 18, height: 18, borderRadius: 5, flexShrink: 0,
-              marginTop: 1,
+              width: 18, height: 18, borderRadius: 5, flexShrink: 0, marginTop: 1,
               background: f.included ? (isPlatinum ? "linear-gradient(135deg,#c8ff00,#8bcc00)" : "rgba(200,255,0,0.15)") : "rgba(255,255,255,0.05)",
               display: "flex", alignItems: "center", justifyContent: "center",
             }}>
@@ -210,17 +199,19 @@ function TierCard({ tier, index }) {
       </div>
 
       {/* CTA Button */}
-      <button style={{
-        width: "100%", padding: "12px 0", border: "none", borderRadius: 10, cursor: "pointer",
-        fontFamily: "'IBM Plex Mono', monospace",
-        fontSize: 12, fontWeight: 500, letterSpacing: 1,
-        background: isPlatinum
-          ? "linear-gradient(135deg, #c8ff00, #8bcc00)"
-          : hovered ? `${tier.color}18` : "rgba(255,255,255,0.05)",
-        color: isPlatinum ? "#0a0a0f" : tier.color,
-        border: "none",
-        transition: "all 0.25s",
-      }}>
+      <button
+        onClick={() => onSelect(tier)}
+        style={{
+          width: "100%", padding: "12px 0", border: "none", borderRadius: 10, cursor: "pointer",
+          fontFamily: "'IBM Plex Mono', monospace",
+          fontSize: 12, fontWeight: 500, letterSpacing: 1,
+          background: isPlatinum
+            ? "linear-gradient(135deg, #c8ff00, #8bcc00)"
+            : hovered ? `${tier.color}22` : "rgba(255,255,255,0.05)",
+          color: isPlatinum ? "#0a0a0f" : tier.color,
+          transition: "all 0.25s",
+        }}
+      >
         {isPlatinum ? "GET MAXIMUM EDGE →" : `SELECT ${tier.name.toUpperCase()} →`}
       </button>
     </div>
@@ -247,14 +238,84 @@ function FOMOTicker() {
   }, []);
   return (
     <div style={{
-      background: "rgba(200,255,0,0.04)", border: "none",
-      borderRadius: 10, padding: "10px 20px", display: "flex", alignItems: "center", gap: 12,
+      background: "rgba(200,255,0,0.04)",
+      borderRadius: 10, padding: "10px 20px",
+      display: "flex", alignItems: "center", gap: 12,
       maxWidth: 520, margin: "0 auto",
     }}>
       <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#c8ff00", boxShadow: "0 0 6px #c8ff00", flexShrink: 0 }} />
-      <span style={{ fontSize: 12, color: "#8aaa50", fontStyle: "italic", transition: "opacity 0.3s" }}>
-        {FOMO_ITEMS[idx]}
-      </span>
+      <span style={{ fontSize: 12, color: "#8aaa50", fontStyle: "italic" }}>{FOMO_ITEMS[idx]}</span>
+    </div>
+  );
+}
+
+// ─── CONTACT MODAL ─────────────────────────────────────────────────────────
+function ContactModal({ tier, onClose }) {
+  const subject = encodeURIComponent(`Aurelius Quant — ${tier.name} Plan ($${tier.price}/season)`);
+  const body = encodeURIComponent(
+    `Hi,\n\nI'm interested in the ${tier.name} plan for my VE firm.\n\nSchool: \nFirm name: \nSeason: \n\nPlease send me onboarding details.\n\nThanks`
+  );
+  const mailtoLink = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
+
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        zIndex: 200, padding: 24,
+      }}
+    >
+      <div
+        onClick={e => e.stopPropagation()}
+        style={{
+          background: "#12121a", borderRadius: 20, padding: "36px 32px",
+          maxWidth: 460, width: "100%",
+          boxShadow: `0 24px 80px rgba(200,255,0,0.12)`,
+          position: "relative",
+        }}
+      >
+        {/* Close */}
+        <button onClick={onClose} style={{
+          position: "absolute", top: 16, right: 16,
+          background: "rgba(255,255,255,0.06)", border: "none", borderRadius: 8,
+          width: 32, height: 32, cursor: "pointer", color: "#6b6b7b", fontSize: 18,
+          display: "flex", alignItems: "center", justifyContent: "center",
+        }}>×</button>
+
+        <div style={{ fontSize: 11, color: "#c8ff00", letterSpacing: 2, textTransform: "uppercase", marginBottom: 8 }}>Get Started</div>
+        <div style={{ fontFamily: "'Syne', sans-serif", fontSize: 24, fontWeight: 800, color: "#fff", marginBottom: 4 }}>
+          {tier.name} Plan
+        </div>
+        <div style={{ fontSize: 28, fontWeight: 800, color: tier.color, fontFamily: "'Syne', sans-serif", marginBottom: 20 }}>
+          ${tier.price}<span style={{ fontSize: 13, fontWeight: 400, color: "#6b6b7b" }}>/season</span>
+        </div>
+
+        <p style={{ fontSize: 13, color: "#6b6b7b", lineHeight: 1.7, marginBottom: 28 }}>
+          Click below to send us an email and we'll get your account set up within 24 hours. Include your school name, firm name, and which season you're competing in.
+        </p>
+
+        <a href={mailtoLink} style={{
+          display: "block", textAlign: "center",
+          background: "linear-gradient(135deg, #c8ff00, #8bcc00)", color: "#0a0a0f",
+          borderRadius: 10, padding: "14px 0",
+          fontFamily: "'IBM Plex Mono', monospace", fontSize: 13, fontWeight: 600,
+          letterSpacing: 0.5, textDecoration: "none",
+          boxShadow: "0 4px 24px rgba(200,255,0,0.25)",
+        }}>
+          EMAIL US TO GET STARTED →
+        </a>
+
+        <div style={{ textAlign: "center", marginTop: 14, fontSize: 11, color: "#3a3a4a" }}>
+          or email {CONTACT_EMAIL} directly
+        </div>
+      </div>
     </div>
   );
 }
@@ -262,6 +323,14 @@ function FOMOTicker() {
 // ─── MAIN APP ──────────────────────────────────────────────────────────────
 export default function App() {
   const [section, setSection] = useState("home");
+  const [selectedTier, setSelectedTier] = useState(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const navigate = (s) => {
+    setSection(s);
+    setMobileMenuOpen(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
     <div style={{ background: "#0a0a0f", minHeight: "100vh", color: "#e8e8ec", fontFamily: "'IBM Plex Mono', monospace" }}>
@@ -274,15 +343,16 @@ export default function App() {
       {/* Nav */}
       <nav style={{
         position: "sticky", top: 0, zIndex: 50,
-        background: "rgba(10,10,15,0.85)", backdropFilter: "blur(12px)",
-        borderBottom: "none",
-        padding: "14px 32px", display: "flex", alignItems: "center", justifyContent: "space-between",
+        background: "rgba(10,10,15,0.9)", backdropFilter: "blur(12px)",
+        padding: "14px 24px",
+        display: "flex", alignItems: "center", justifyContent: "space-between",
       }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer" }} onClick={() => setSection("home")}>
+        {/* Logo */}
+        <div style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer" }} onClick={() => navigate("home")}>
           <div style={{
             width: 28, height: 28, borderRadius: 6,
             background: "linear-gradient(135deg, #c8ff00, #8bcc00)",
-            display: "flex", alignItems: "center", justifyContent: "center",
+            display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
           }}>
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
               <path d="M7 1L12 4V10L7 13L2 10V4L7 1Z" stroke="#0a0a0f" strokeWidth="1.8" fill="none"/>
@@ -291,9 +361,11 @@ export default function App() {
           </div>
           <span style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 16, color: "#fff" }}>Aurelius Quant</span>
         </div>
-        <div style={{ display: "flex", gap: 28 }}>
+
+        {/* Desktop nav links */}
+        <div style={{ display: "flex", gap: 28, alignItems: "center" }} className="desktop-nav">
           {["home", "pricing", "demo"].map(s => (
-            <button key={s} onClick={() => setSection(s)} style={{
+            <button key={s} onClick={() => navigate(s)} style={{
               background: "none", border: "none", cursor: "pointer",
               fontSize: 12, fontFamily: "'IBM Plex Mono', monospace",
               color: section === s ? "#c8ff00" : "#6b6b7b",
@@ -301,24 +373,78 @@ export default function App() {
               transition: "color 0.2s", fontWeight: 500,
             }}>{s}</button>
           ))}
+          <button onClick={() => navigate("pricing")} style={{
+            background: "linear-gradient(135deg, #c8ff00, #8bcc00)", color: "#0a0a0f",
+            border: "none", borderRadius: 8, padding: "8px 18px", cursor: "pointer",
+            fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, fontWeight: 600, letterSpacing: 0.5,
+          }}>GET STARTED →</button>
         </div>
+
+        {/* Mobile hamburger */}
+        <button
+          onClick={() => setMobileMenuOpen(o => !o)}
+          style={{
+            display: "none",
+            background: "rgba(255,255,255,0.06)", border: "none", borderRadius: 8,
+            width: 36, height: 36, cursor: "pointer", color: "#c8ff00",
+            fontSize: 18, alignItems: "center", justifyContent: "center",
+          }}
+          className="mobile-menu-btn"
+        >
+          {mobileMenuOpen ? "×" : "≡"}
+        </button>
       </nav>
+
+      {/* Mobile nav dropdown */}
+      {mobileMenuOpen && (
+        <div style={{
+          position: "fixed", top: 56, left: 0, right: 0, zIndex: 49,
+          background: "rgba(10,10,15,0.98)", backdropFilter: "blur(12px)",
+          padding: "16px 24px 24px",
+          display: "flex", flexDirection: "column", gap: 4,
+        }}>
+          {["home", "pricing", "demo"].map(s => (
+            <button key={s} onClick={() => navigate(s)} style={{
+              background: section === s ? "rgba(200,255,0,0.08)" : "none",
+              border: "none", cursor: "pointer", borderRadius: 8,
+              fontSize: 13, fontFamily: "'IBM Plex Mono', monospace",
+              color: section === s ? "#c8ff00" : "#a0a0b0",
+              letterSpacing: 1, textTransform: "uppercase", fontWeight: 500,
+              padding: "14px 16px", textAlign: "left",
+            }}>{s}</button>
+          ))}
+          <button onClick={() => navigate("pricing")} style={{
+            marginTop: 8,
+            background: "linear-gradient(135deg, #c8ff00, #8bcc00)", color: "#0a0a0f",
+            border: "none", borderRadius: 8, padding: "14px 0", cursor: "pointer",
+            fontFamily: "'IBM Plex Mono', monospace", fontSize: 12, fontWeight: 600,
+          }}>GET STARTED →</button>
+        </div>
+      )}
+
+      {/* Responsive styles injected */}
+      <style>{`
+        @media (max-width: 640px) {
+          .desktop-nav { display: none !important; }
+          .mobile-menu-btn { display: flex !important; }
+        }
+      `}</style>
 
       {/* PAGES */}
       <div style={{ position: "relative", zIndex: 1 }}>
-        {section === "home" && <HomePage setSection={setSection} />}
-        {section === "pricing" && <PricingPage />}
-        {section === "demo" && <DemoPage />}
+        {section === "home" && <HomePage setSection={navigate} />}
+        {section === "pricing" && <PricingPage onSelect={setSelectedTier} />}
+        {section === "demo" && <DemoPage setSection={navigate} />}
       </div>
 
       {/* Footer */}
-      <footer style={{
-        textAlign: "center", padding: "60px 24px 40px",
-        borderTop: "none", marginTop: 80,
-      }}>
+      <footer style={{ textAlign: "center", padding: "60px 24px 40px", marginTop: 80 }}>
         <div style={{ fontFamily: "'Syne', sans-serif", fontSize: 18, fontWeight: 700, color: "#fff", marginBottom: 8 }}>Aurelius Quant</div>
-        <div style={{ fontSize: 11, color: "#3a3a4a", letterSpacing: 1 }}>© 2026 AURELIUS QUANT. ALL RIGHTS RESERVED. PROPRIETARY SOFTWARE.</div>
+        <div style={{ fontSize: 11, color: "#3a3a4a", letterSpacing: 1 }}>© 2026 AURELIUS QUANT. ALL RIGHTS RESERVED.</div>
       </footer>
+
+      {/* Contact modal */}
+      {selectedTier && <ContactModal tier={selectedTier} onClose={() => setSelectedTier(null)} />}
     </div>
   );
 }
@@ -329,12 +455,12 @@ function HomePage({ setSection }) {
     <div style={{ maxWidth: 860, margin: "0 auto", padding: "80px 24px 40px", textAlign: "center" }}>
       {/* Badge */}
       <div style={{
-        display: "inline-block", background: "rgba(200,255,0,0.1)", border: "none",
+        display: "inline-block", background: "rgba(200,255,0,0.1)",
         borderRadius: 20, padding: "5px 16px", fontSize: 11, color: "#c8ff00",
         letterSpacing: 2, textTransform: "uppercase", marginBottom: 24, fontWeight: 500,
       }}>Quantitative Decision Platform</div>
 
-      {/* Hero Title */}
+      {/* Hero */}
       <h1 style={{
         fontFamily: "'Syne', sans-serif", fontSize: "clamp(42px, 7vw, 72px)",
         fontWeight: 800, lineHeight: 1.05, letterSpacing: -2.5, marginBottom: 24,
@@ -344,27 +470,23 @@ function HomePage({ setSection }) {
         The edge your<br />rivals don't have.
       </h1>
 
-      {/* Sub */}
       <p style={{ fontSize: 15, color: "#6b6b7b", maxWidth: 480, margin: "0 auto 36px", lineHeight: 1.7 }}>
         AI-powered quantitative analysis built for competitive business simulation. Monte Carlo simulations, constraint enforcement, and predictive scoring — all running server-side. Your competitors never see how it works.
       </p>
 
       {/* FOMO */}
-      <div style={{ marginBottom: 40 }}>
-        <FOMOTicker />
-      </div>
+      <div style={{ marginBottom: 40 }}><FOMOTicker /></div>
 
-      {/* CTA Buttons */}
+      {/* CTAs */}
       <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", marginBottom: 72 }}>
         <button onClick={() => setSection("pricing")} style={{
           background: "linear-gradient(135deg, #c8ff00, #8bcc00)", color: "#0a0a0f",
           border: "none", borderRadius: 10, padding: "14px 32px", cursor: "pointer",
           fontFamily: "'IBM Plex Mono', monospace", fontSize: 13, fontWeight: 600, letterSpacing: 0.5,
-          boxShadow: "0 4px 24px rgba(200,255,0,0.25)",
-          transition: "transform 0.2s, box-shadow 0.2s",
+          boxShadow: "0 4px 24px rgba(200,255,0,0.25)", transition: "transform 0.2s, box-shadow 0.2s",
         }}
-          onMouseEnter={e => { e.target.style.transform = "translateY(-2px)"; e.target.style.boxShadow = "0 6px 32px rgba(200,255,0,0.4)"; }}
-          onMouseLeave={e => { e.target.style.transform = "translateY(0)"; e.target.style.boxShadow = "0 4px 24px rgba(200,255,0,0.25)"; }}
+          onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 6px 32px rgba(200,255,0,0.4)"; }}
+          onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 4px 24px rgba(200,255,0,0.25)"; }}
         >START WINNING →</button>
         <button onClick={() => setSection("demo")} style={{
           background: "transparent", color: "#c8ff00",
@@ -372,8 +494,8 @@ function HomePage({ setSection }) {
           fontFamily: "'IBM Plex Mono', monospace", fontSize: 13, fontWeight: 500, letterSpacing: 0.5,
           transition: "background 0.2s",
         }}
-          onMouseEnter={e => e.target.style.background = "rgba(200,255,0,0.08)"}
-          onMouseLeave={e => e.target.style.background = "transparent"}
+          onMouseEnter={e => e.currentTarget.style.background = "rgba(200,255,0,0.08)"}
+          onMouseLeave={e => e.currentTarget.style.background = "transparent"}
         >SEE DEMO</button>
       </div>
 
@@ -394,8 +516,7 @@ function HomePage({ setSection }) {
           ].map((item, i) => (
             <div key={i} style={{
               flex: "1 1 180px", maxWidth: 220,
-              background: "#12121a", border: "none",
-              borderRadius: 14, padding: "24px 20px",
+              background: "#12121a", borderRadius: 14, padding: "24px 20px",
             }}>
               <div style={{ fontFamily: "'Syne', sans-serif", fontSize: 28, fontWeight: 800, color: "rgba(200,255,0,0.15)", marginBottom: 8 }}>{item.step}</div>
               <div style={{ fontFamily: "'Syne', sans-serif", fontSize: 16, fontWeight: 700, color: "#fff", marginBottom: 8 }}>{item.title}</div>
@@ -407,9 +528,9 @@ function HomePage({ setSection }) {
 
       {/* FOMO CTA */}
       <div style={{
-        marginTop: 80, background: "linear-gradient(135deg, rgba(200,255,0,0.06), rgba(200,255,0,0.02))",
-        border: "none", borderRadius: 20,
-        padding: "48px 32px", textAlign: "center",
+        marginTop: 80,
+        background: "linear-gradient(135deg, rgba(200,255,0,0.06), rgba(200,255,0,0.02))",
+        borderRadius: 20, padding: "48px 32px", textAlign: "center",
       }}>
         <div style={{ fontFamily: "'Syne', sans-serif", fontSize: 28, fontWeight: 800, color: "#fff", marginBottom: 12 }}>
           Your rivals are already using this.
@@ -428,11 +549,11 @@ function HomePage({ setSection }) {
 }
 
 // ─── PRICING PAGE ──────────────────────────────────────────────────────────
-function PricingPage() {
+function PricingPage({ onSelect }) {
   return (
     <div style={{ maxWidth: 1100, margin: "0 auto", padding: "80px 24px 40px", textAlign: "center" }}>
       <div style={{
-        display: "inline-block", background: "rgba(200,255,0,0.1)", border: "none",
+        display: "inline-block", background: "rgba(200,255,0,0.1)",
         borderRadius: 20, padding: "5px 16px", fontSize: 11, color: "#c8ff00",
         letterSpacing: 2, textTransform: "uppercase", marginBottom: 20, fontWeight: 500,
       }}>Pricing</div>
@@ -446,13 +567,11 @@ function PricingPage() {
       <FOMOTicker />
 
       <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap", marginTop: 48 }}>
-        {TIERS.map((tier, i) => <TierCard key={i} tier={tier} index={i} />)}
+        {TIERS.map((tier, i) => <TierCard key={i} tier={tier} onSelect={onSelect} />)}
       </div>
 
       {/* Trust bar */}
-      <div style={{
-        marginTop: 64, display: "flex", justifyContent: "center", gap: 40, flexWrap: "wrap",
-      }}>
+      <div style={{ marginTop: 64, display: "flex", justifyContent: "center", gap: 40, flexWrap: "wrap" }}>
         {[
           { icon: "🔒", text: "Server-side only" },
           { icon: "🛡️", text: "Code never exposed" },
@@ -470,7 +589,7 @@ function PricingPage() {
 }
 
 // ─── DEMO PAGE ─────────────────────────────────────────────────────────────
-function DemoPage() {
+function DemoPage({ setSection }) {
   const [businessPlan, setBusinessPlan] = useState("");
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState(null);
@@ -483,60 +602,6 @@ function DemoPage() {
     }
   }, [results]);
 
-  const SYSTEM_PROMPT = `You are the Aurelius Quant — a quantitative decision analysis system used in competitive business simulation for schools.
-
-When a user submits a business plan, you must analyze it and return a FULL quantitative report in this exact JSON structure. Return ONLY valid JSON, nothing else.
-
-{
-  "firm_name": "extracted from plan",
-  "business_type": "product|service|reseller|platform",
-  "constraint_validation": {
-    "passed": true|false,
-    "checks_run": number,
-    "violations": ["list of any violations or empty array"]
-  },
-  "financial_projection": {
-    "revenue_estimate": number,
-    "cost_estimate": number,
-    "profit_margin_pct": number,
-    "cash_reserve": number
-  },
-  "monte_carlo": {
-    "win_probability_pct": number between 0-100,
-    "best_case_revenue": number,
-    "worst_case_revenue": number,
-    "median_revenue": number,
-    "simulations_run": 1000
-  },
-  "complexity_score": {
-    "composite": number between 0-1 (lower is better),
-    "feature_score": number 0-1,
-    "model_score": number 0-1,
-    "strategy_score": number 0-1,
-    "robustness_score": number 0-1
-  },
-  "judge_prediction": {
-    "predicted_score": number 0-100,
-    "complexity_adjusted_score": number 0-100,
-    "confidence_pct": number 0-100
-  },
-  "scenario_analysis": {
-    "best_scenario": { "name": "string", "win_prob_pct": number },
-    "worst_scenario": { "name": "string", "win_prob_pct": number },
-    "recommended_strategy": "string"
-  },
-  "recommendations": ["array of 3-5 actionable recommendations"],
-  "summary": "2-3 sentence executive summary"
-}
-
-Rules for analysis:
-- Be realistic with numbers based on the business plan details
-- Constraint violations include: negative costs, revenue over 1M, employees over 12, no real product
-- Complexity composite = average of the 4 sub-scores
-- complexity_adjusted_score = predicted_score * (1 - composite * 0.3)
-- Higher win probability for well-structured, realistic plans
-- Penalize vague or unrealistic plans with lower confidence and win probability`;
-
   async function runAnalysis() {
     if (!businessPlan.trim()) return;
     setLoading(true);
@@ -544,24 +609,21 @@ Rules for analysis:
     setError(null);
 
     try {
-      const response = await fetch("https://api.anthropic.com/v1/messages", {
+      const response = await fetch("/api/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: CLAUDE_MODEL,
-          max_tokens: 1000,
-          system: SYSTEM_PROMPT,
-          messages: [{ role: "user", content: `Analyze this business plan:\n\n${businessPlan}` }],
-        }),
+        body: JSON.stringify({ businessPlan }),
       });
 
-      const data = await response.json();
-      const text = data.content.map(b => b.text || "").join("");
-      const clean = text.replace(/```json|```/g, "").trim();
-      const parsed = JSON.parse(clean);
+      if (!response.ok) {
+        const err = await response.json().catch(() => ({}));
+        throw new Error(err.error || "Analysis failed.");
+      }
+
+      const parsed = await response.json();
       setResults(parsed);
     } catch (err) {
-      setError("Analysis failed. Please try again.");
+      setError(err.message || "Analysis failed. Please try again.");
     }
     setLoading(false);
   }
@@ -570,7 +632,7 @@ Rules for analysis:
     <div style={{ maxWidth: 780, margin: "0 auto", padding: "80px 24px 40px" }}>
       <div style={{ textAlign: "center", marginBottom: 40 }}>
         <div style={{
-          display: "inline-block", background: "rgba(200,255,0,0.1)", border: "none",
+          display: "inline-block", background: "rgba(200,255,0,0.1)",
           borderRadius: 20, padding: "5px 16px", fontSize: 11, color: "#c8ff00",
           letterSpacing: 2, textTransform: "uppercase", marginBottom: 20, fontWeight: 500,
         }}>Live Demo</div>
@@ -584,38 +646,42 @@ Rules for analysis:
       </div>
 
       {/* Input */}
-      <div style={{
-        background: "#12121a", border: "none",
-        borderRadius: 16, padding: 24, marginBottom: 24,
-      }}>
+      <div style={{ background: "#12121a", borderRadius: 16, padding: 24, marginBottom: 24 }}>
         <label style={{ fontSize: 11, color: "#c8ff00", letterSpacing: 1.5, textTransform: "uppercase", display: "block", marginBottom: 10 }}>
           Business Plan
         </label>
         <textarea
           value={businessPlan}
           onChange={e => setBusinessPlan(e.target.value)}
-          placeholder={"Example: Our firm \"TechForward\" will sell a SaaS product targeting small businesses. We plan to hire 4 employees, price at $50/month, and target 500 customers by end of year. Startup costs are $8,000 and monthly operating costs are $3,500..."}
+          placeholder={`Example: Our firm "TechForward" will sell a SaaS product targeting small businesses. We plan to hire 4 employees, price at $50/month, and target 500 customers by end of year. Startup costs are $8,000 and monthly operating costs are $3,500...`}
           rows={6}
           style={{
             width: "100%", background: "rgba(0,0,0,0.3)", border: "none", outline: "none",
             borderRadius: 10, padding: "14px 16px", color: "#e8e8ec", resize: "vertical",
             fontFamily: "'IBM Plex Mono', monospace", fontSize: 13, lineHeight: 1.7,
-            outline: "none",
           }}
         />
-        <button onClick={runAnalysis} disabled={loading || !businessPlan.trim()} style={{
-          marginTop: 16, width: "100%", padding: "14px 0", border: "none", borderRadius: 10, cursor: loading ? "not-allowed" : "pointer",
-          background: loading ? "#2a2a3a" : "linear-gradient(135deg, #c8ff00, #8bcc00)",
-          color: loading ? "#6b6b7b" : "#0a0a0f",
-          fontFamily: "'IBM Plex Mono', monospace", fontSize: 13, fontWeight: 600, letterSpacing: 1,
-          transition: "all 0.2s",
-        }}>
+        <button
+          onClick={runAnalysis}
+          disabled={loading || !businessPlan.trim()}
+          style={{
+            marginTop: 16, width: "100%", padding: "14px 0", border: "none", borderRadius: 10,
+            cursor: loading || !businessPlan.trim() ? "not-allowed" : "pointer",
+            background: loading ? "#2a2a3a" : "linear-gradient(135deg, #c8ff00, #8bcc00)",
+            color: loading ? "#6b6b7b" : "#0a0a0f",
+            fontFamily: "'IBM Plex Mono', monospace", fontSize: 13, fontWeight: 600, letterSpacing: 1,
+            transition: "all 0.2s",
+          }}
+        >
           {loading ? "RUNNING ANALYSIS..." : "RUN QUANT ANALYSIS →"}
         </button>
       </div>
 
       {error && (
-        <div style={{ background: "rgba(255,77,77,0.1)", border: "none", borderRadius: 10, padding: "12px 16px", color: "#ff6b6b", fontSize: 13, marginBottom: 24 }}>
+        <div style={{
+          background: "rgba(255,77,77,0.1)", borderRadius: 10, padding: "12px 16px",
+          color: "#ff6b6b", fontSize: 13, marginBottom: 24,
+        }}>
           {error}
         </div>
       )}
@@ -626,7 +692,7 @@ Rules for analysis:
           {/* Header */}
           <div style={{
             background: "linear-gradient(135deg, rgba(200,255,0,0.08), rgba(200,255,0,0.02))",
-            border: "none", borderRadius: 16, padding: "24px 28px",
+            borderRadius: 16, padding: "24px 28px",
           }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 12 }}>
               <div>
@@ -637,22 +703,17 @@ Rules for analysis:
               <div style={{ textAlign: "right" }}>
                 <div style={{ fontSize: 11, color: "#6b6b7b" }}>Win Probability</div>
                 <div style={{
-                  fontFamily: "'Syne', sans-serif", fontSize: 42, fontWeight: 800,
+                  fontFamily: "'Syne', sans-serif", fontSize: 42, fontWeight: 800, letterSpacing: -2, lineHeight: 1,
                   color: results.monte_carlo.win_probability_pct >= 60 ? "#c8ff00" : results.monte_carlo.win_probability_pct >= 40 ? "#ffb84d" : "#ff4d4d",
-                  letterSpacing: -2, lineHeight: 1,
                 }}>{results.monte_carlo.win_probability_pct}%</div>
               </div>
             </div>
             <p style={{ fontSize: 13, color: "#a0a0b0", marginTop: 16, lineHeight: 1.6 }}>{results.summary}</p>
           </div>
 
-          {/* Grid: Constraints + Judge */}
+          {/* Constraints + Judge */}
           <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-            {/* Constraints */}
-            <div style={{
-              flex: "1 1 300px", background: "#12121a", border: "none",
-              borderRadius: 16, padding: 24,
-            }}>
+            <div style={{ flex: "1 1 300px", background: "#12121a", borderRadius: 16, padding: 24 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
                 <div style={{
                   width: 24, height: 24, borderRadius: 6,
@@ -676,49 +737,42 @@ Rules for analysis:
               )}
             </div>
 
-            {/* Judge Prediction */}
-            <div style={{ flex: "1 1 300px", background: "#12121a", border: "none", borderRadius: 16, padding: 24 }}>
+            <div style={{ flex: "1 1 300px", background: "#12121a", borderRadius: 16, padding: 24 }}>
               <div style={{ fontSize: 11, color: "#6b6b7b", letterSpacing: 1, textTransform: "uppercase", marginBottom: 16 }}>Judge Prediction</div>
               <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
-                <div>
-                  <div style={{ fontSize: 11, color: "#6b6b7b", marginBottom: 4 }}>Raw Score</div>
-                  <div style={{ fontFamily: "'Syne', sans-serif", fontSize: 30, fontWeight: 800, color: "#fff" }}>{results.judge_prediction.predicted_score}</div>
-                </div>
-                <div>
-                  <div style={{ fontSize: 11, color: "#6b6b7b", marginBottom: 4 }}>Adjusted</div>
-                  <div style={{ fontFamily: "'Syne', sans-serif", fontSize: 30, fontWeight: 800, color: "#c8ff00" }}>{results.judge_prediction.complexity_adjusted_score}</div>
-                </div>
-                <div>
-                  <div style={{ fontSize: 11, color: "#6b6b7b", marginBottom: 4 }}>Confidence</div>
-                  <div style={{ fontFamily: "'Syne', sans-serif", fontSize: 30, fontWeight: 800, color: "#4dbaff" }}>{results.judge_prediction.confidence_pct}%</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Grid: Monte Carlo + Complexity */}
-          <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-            {/* Monte Carlo */}
-            <div style={{ flex: "1 1 300px", background: "#12121a", border: "none", borderRadius: 16, padding: 24 }}>
-              <div style={{ fontSize: 11, color: "#6b6b7b", letterSpacing: 1, textTransform: "uppercase", marginBottom: 16 }}>
-                Monte Carlo — {results.monte_carlo.simulations_run.toLocaleString()} sims
-              </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                 {[
-                  { label: "Best Case", value: results.monte_carlo.best_case_revenue, color: "#c8ff00" },
-                  { label: "Median", value: results.monte_carlo.median_revenue, color: "#4dbaff" },
-                  { label: "Worst Case", value: results.monte_carlo.worst_case_revenue, color: "#ff4d4d" },
+                  { label: "Raw Score", value: results.judge_prediction.predicted_score, color: "#fff" },
+                  { label: "Adjusted", value: results.judge_prediction.complexity_adjusted_score, color: "#c8ff00" },
+                  { label: "Confidence", value: `${results.judge_prediction.confidence_pct}%`, color: "#4dbaff" },
                 ].map((item, i) => (
-                  <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <span style={{ fontSize: 12, color: "#6b6b7b" }}>{item.label}</span>
-                    <span style={{ fontSize: 14, fontWeight: 500, color: item.color }}>${item.value.toLocaleString()}</span>
+                  <div key={i}>
+                    <div style={{ fontSize: 11, color: "#6b6b7b", marginBottom: 4 }}>{item.label}</div>
+                    <div style={{ fontFamily: "'Syne', sans-serif", fontSize: 30, fontWeight: 800, color: item.color }}>{item.value}</div>
                   </div>
                 ))}
               </div>
             </div>
+          </div>
 
-            {/* Complexity */}
-            <div style={{ flex: "1 1 300px", background: "#12121a", border: "none", borderRadius: 16, padding: 24 }}>
+          {/* Monte Carlo + Complexity */}
+          <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
+            <div style={{ flex: "1 1 300px", background: "#12121a", borderRadius: 16, padding: 24 }}>
+              <div style={{ fontSize: 11, color: "#6b6b7b", letterSpacing: 1, textTransform: "uppercase", marginBottom: 16 }}>
+                Monte Carlo — {results.monte_carlo.simulations_run.toLocaleString()} sims
+              </div>
+              {[
+                { label: "Best Case", value: results.monte_carlo.best_case_revenue, color: "#c8ff00" },
+                { label: "Median", value: results.monte_carlo.median_revenue, color: "#4dbaff" },
+                { label: "Worst Case", value: results.monte_carlo.worst_case_revenue, color: "#ff4d4d" },
+              ].map((item, i) => (
+                <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+                  <span style={{ fontSize: 12, color: "#6b6b7b" }}>{item.label}</span>
+                  <span style={{ fontSize: 14, fontWeight: 500, color: item.color }}>${item.value.toLocaleString()}</span>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ flex: "1 1 300px", background: "#12121a", borderRadius: 16, padding: 24 }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
                 <span style={{ fontSize: 11, color: "#6b6b7b", letterSpacing: 1, textTransform: "uppercase" }}>Complexity Score</span>
                 <span style={{
@@ -751,7 +805,7 @@ Rules for analysis:
 
           {/* Financials + Scenarios */}
           <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-            <div style={{ flex: "1 1 300px", background: "#12121a", border: "none", borderRadius: 16, padding: 24 }}>
+            <div style={{ flex: "1 1 300px", background: "#12121a", borderRadius: 16, padding: 24 }}>
               <div style={{ fontSize: 11, color: "#6b6b7b", letterSpacing: 1, textTransform: "uppercase", marginBottom: 16 }}>Financial Projection</div>
               {[
                 { label: "Revenue", value: results.financial_projection.revenue_estimate, color: "#c8ff00" },
@@ -763,7 +817,7 @@ Rules for analysis:
                   <span style={{ fontSize: 14, fontWeight: 500, color: item.color }}>${item.value.toLocaleString()}</span>
                 </div>
               ))}
-              <div style={{ borderTop: "none", marginTop: 12, paddingTop: 12, display: "flex", justifyContent: "space-between" }}>
+              <div style={{ marginTop: 12, paddingTop: 12, borderTop: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between" }}>
                 <span style={{ fontSize: 12, color: "#6b6b7b" }}>Profit Margin</span>
                 <span style={{
                   fontSize: 14, fontWeight: 600,
@@ -772,7 +826,7 @@ Rules for analysis:
               </div>
             </div>
 
-            <div style={{ flex: "1 1 300px", background: "#12121a", border: "none", borderRadius: 16, padding: 24 }}>
+            <div style={{ flex: "1 1 300px", background: "#12121a", borderRadius: 16, padding: 24 }}>
               <div style={{ fontSize: 11, color: "#6b6b7b", letterSpacing: 1, textTransform: "uppercase", marginBottom: 16 }}>Scenario Analysis</div>
               <div style={{ background: "rgba(200,255,0,0.06)", borderRadius: 8, padding: "10px 14px", marginBottom: 8 }}>
                 <div style={{ fontSize: 11, color: "#c8ff00", marginBottom: 2 }}>Best: {results.scenario_analysis.best_scenario.name}</div>
@@ -788,7 +842,7 @@ Rules for analysis:
           </div>
 
           {/* Recommendations */}
-          <div style={{ background: "#12121a", border: "none", borderRadius: 16, padding: 24 }}>
+          <div style={{ background: "#12121a", borderRadius: 16, padding: 24 }}>
             <div style={{ fontSize: 11, color: "#6b6b7b", letterSpacing: 1, textTransform: "uppercase", marginBottom: 16 }}>Recommendations</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {results.recommendations.map((r, i) => (
@@ -807,12 +861,17 @@ Rules for analysis:
           {/* Upgrade nudge */}
           <div style={{
             background: "linear-gradient(135deg, rgba(200,255,0,0.06), rgba(200,255,0,0.02))",
-            border: "none", borderRadius: 16, padding: "24px 28px", textAlign: "center",
+            borderRadius: 16, padding: "24px 28px", textAlign: "center",
           }}>
             <div style={{ fontSize: 13, color: "#a0a0b0", marginBottom: 8 }}>
               This demo runs <strong style={{ color: "#c8ff00" }}>1,000 simulations</strong>. Paid tiers unlock up to <strong style={{ color: "#c8ff00" }}>10,000 sims</strong>, stress testing, competitive intelligence, and more.
             </div>
-            <div style={{ fontSize: 12, color: "#6b6b7b" }}>Plans start at $100/season</div>
+            <div style={{ fontSize: 12, color: "#6b6b7b", marginBottom: 16 }}>Plans start at $100/season</div>
+            <button onClick={() => setSection("pricing")} style={{
+              background: "linear-gradient(135deg, #c8ff00, #8bcc00)", color: "#0a0a0f",
+              border: "none", borderRadius: 8, padding: "10px 24px", cursor: "pointer",
+              fontFamily: "'IBM Plex Mono', monospace", fontSize: 12, fontWeight: 600,
+            }}>SEE PLANS →</button>
           </div>
         </div>
       )}
