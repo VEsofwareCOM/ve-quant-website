@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ve-quant-website-vohh.vercel.app/sitemap.xml
